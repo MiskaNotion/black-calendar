@@ -6,7 +6,6 @@
 <title>Neutral Calendar</title>
 
 <style>
-  /* HARD RESET — prevents Notion blending */
   html {
     background: #1f1f1f !important;
   }
@@ -21,17 +20,15 @@
     align-items: flex-start;
   }
 
-  /* Calendar wrapper */
   .calendar {
-  width: 360px;
-  background: #3a3a3a; /* MATCHES HEADER */
-  padding: 18px 16px 20px;
-  border-radius: 16px;
-  border: 1px solid #3a3a3a;
-  box-sizing: border-box;
-}
+    width: 360px;
+    background: #3a3a3a;
+    padding: 18px 16px 20px;
+    border-radius: 16px;
+    border: 1px solid #3a3a3a;
+    box-sizing: border-box;
+  }
 
-  /* Header */
   .header {
     display: flex;
     align-items: center;
@@ -57,7 +54,6 @@
     color: #ffffff;
   }
 
-  /* Weekdays */
   .weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -71,7 +67,6 @@
     color: #d6d6d6;
   }
 
-  /* Days grid */
   .days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -91,8 +86,9 @@
     font-weight: 700;
   }
 
-  .muted {
-    color: #6f6f6f;
+  /* 🔑 STRONG muted rule (prevents Notion override) */
+  .days .muted {
+    color: #6f6f6f !important;
   }
 </style>
 </head>
@@ -134,13 +130,15 @@
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const prevMonthDays = new Date(year, month, 0).getDate();
 
+    /* Previous month (muted) */
     for (let i = startDay; i > 0; i--) {
       const d = document.createElement("div");
-      d.className = "muted";
+      d.classList.add("muted");
       d.textContent = prevMonthDays - i + 1;
       daysContainer.appendChild(d);
     }
 
+    /* Current month */
     for (let i = 1; i <= daysInMonth; i++) {
       const d = document.createElement("div");
       d.textContent = i;
@@ -154,6 +152,17 @@
         d.classList.add("today");
       }
 
+      daysContainer.appendChild(d);
+    }
+
+    /* Next month (muted) */
+    const totalCells = daysContainer.children.length;
+    const remaining = 7 * Math.ceil(totalCells / 7) - totalCells;
+
+    for (let i = 1; i <= remaining; i++) {
+      const d = document.createElement("div");
+      d.classList.add("muted");
+      d.textContent = i;
       daysContainer.appendChild(d);
     }
   }
